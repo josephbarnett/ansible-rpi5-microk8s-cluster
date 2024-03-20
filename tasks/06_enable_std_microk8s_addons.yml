@@ -1,0 +1,14 @@
+- name: Enable MicroK8s add-ons
+  command: microk8s enable {{ item }}
+  loop:
+    - community
+    - dashboard
+    - dns
+    - ingress
+    - hostpath-storage
+    - storage
+    - metrics-server
+    - ha-cluster
+    - helm
+    - helm3
+  when: inventory_hostname == groups['master'][0]

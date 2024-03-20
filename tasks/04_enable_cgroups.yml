@@ -1,0 +1,6 @@
+- name: Enable cgroup in /boot/firmware/cmdline.txt
+  ansible.builtin.lineinfile:
+    path: /boot/firmware/cmdline.txt
+    backrefs: true
+    regexp: '^console(.*)=BL$'
+    line: '\g<0> cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1'

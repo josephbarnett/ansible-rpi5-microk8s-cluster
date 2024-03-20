@@ -1,0 +1,26 @@
+- name: Install MicroK8s
+  snap:
+    name: microk8s
+    classic: true
+
+- name: Ensure .kube directory exists
+  file:
+    path: "{{ ansible_env.HOME }}/.kube"
+    state: directory
+    mode: "0755"
+
+- name: Add user to microk8s group
+  user:
+    name: "{{ ansible_user }}"
+    groups: microk8s
+    append: true
+
+- name: Configure MicroK8s for user
+  shell: "microk8s config > $HOME/.kube/config"
+  args:
+    executable: /bin/bash
+
+- name: Set up aliases
+  lineinfile:
+    dest: "$HOME/.bashrc"
+    line: "alias kubectl='microk8s kubectl'"

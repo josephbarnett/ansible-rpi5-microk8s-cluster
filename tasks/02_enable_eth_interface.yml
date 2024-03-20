@@ -1,0 +1,9 @@
+- name: Enable Ethernet interface
+  become: true
+  command: ip link set dev eth0 up
+
+- name: Enable DHCP for eth0
+  become: true
+  command: netplan set ethernets.eth0.dhcp4=true
+  notify:
+    - Apply netplan configuration

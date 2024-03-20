@@ -1,0 +1,7 @@
+- name: Setup External Load Balancer Support
+  template:
+    src: metallb-config-template.yaml.j2
+    dest: "$HOME/.kube/metallb-config.yaml"
+  notify:
+    - Apply metallb config
+  when: inventory_hostname == groups['master'][0]

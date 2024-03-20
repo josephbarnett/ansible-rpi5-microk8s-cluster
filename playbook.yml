@@ -1,0 +1,18 @@
+- name: Setup MicroK8s on Raspberry Pi 5 running Ubuntu 23.04 LTS
+  hosts: all
+  become: true
+  serial: 1 # Ensures tasks run on each host in sequence
+  handlers:
+    - name: Apply netplan configuration
+      command: netplan apply
+    - name: Apply metallb config
+      command: microk8s kubectl apply -f $HOME/.kube/metallb-config.yaml
+  tasks:
+    - ansible.builtin.include_tasks: tasks/01_update_apt.yml
+    - ansible.builtin.include_tasks: tasks/02_enable_eth_interface.yml
+    - ansible.builtin.include_tasks: tasks/03_disable_swap.yml
+    - ansible.builtin.include_tasks: tasks/04_enable_cgroups.yml
+    - ansible.builtin.include_tasks: tasks/05_install_microk8s.yml
+    - ansible.builtin.include_tasks: tasks/06_enable_std_microk8s_addons.yml
+    - ansible.builtin.include_tasks: tasks/07_enable_metallb_microk8s_addon.yml
+    - ansible.builtin.include_tasks: tasks/08_enable_kata_microk8s_addon.yml

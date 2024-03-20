@@ -1,0 +1,44 @@
+- name: Download Kata Containers
+  get_url:
+    url: https://github.com/kata-containers/kata-containers/releases/download/3.2.0/kata-static-3.2.0-arm64.tar.xz
+    dest: /tmp/kata-static-3.2.0-arm64.tar.xz
+
+- name: Extract Kata Containers
+  command: "xz -d -f -v /tmp/kata-static-3.2.0-arm64.tar.xz"
+  args:
+    chdir: /tmp
+
+- name: Extract Kata Containers Archive
+  command: "tar xf /tmp/kata-static-3.2.0-arm64.tar -C /"
+
+- name: Create symbolic links
+  file:
+    src: "/opt/kata/bin/{{ item }}"
+    dest: "/bin/{{ item }}"
+    state: link
+  loop:
+    - firecracker
+    - jailer
+    - kata-collect-data.sh
+    - kata-runtime
+
+- name: Add arm64 to supported architectures for kata
+  ansible.builtin.blockinfile:
+    path: "/var/snap/microk8s/common/addons/community/addons.yaml"
+    block: |
+      {% filter indent(width=4, first=true) %}
+      - name: "kata"
+        description: "Kata Containers is a secure runtime with lightweight VMS"
+        version: "latest/stable"
+        check_status: "${SNAP_DATA}/var/lock/kata.enabled"
+        confinement: "classic"
+        supported_architectures:
+          - amd64
+          - arm64
+      {% endfilter %}
+    state: present
+  when: inventory_hostname == groups['master'][0]
+
+- name: Enable Kata Containers
+  command: "microk8s enable kata --runtime-path=/opt/kata/bin"
+  when: inventory_hostname == groups['master'][0]

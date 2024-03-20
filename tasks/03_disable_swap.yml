@@ -1,0 +1,20 @@
+- name: Check whether a package called dphys-swapfile is installed
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Turn off "dphys-swapfile"
+  ansible.builtin.command: dphys-swapfile swapoff
+  when: "'dphys-swapfile' in ansible_facts.packages"
+
+- name: Uninstall "dphys-swapfile"
+  ansible.builtin.command: dphys-swapfile uninstall
+  when: "'dphys-swapfile' in ansible_facts.packages"
+
+- name: Remove and purge "dphys-swapfile" package
+  ansible.builtin.apt:
+    pkg: dphys-swapfile
+    state: absent
+    purge: yes
+    autoclean: yes
+    autoremove: yes
+  when: "'dphys-swapfile' in ansible_facts.packages"

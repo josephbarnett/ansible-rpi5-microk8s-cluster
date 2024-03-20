@@ -1,0 +1,13 @@
+- name: Update APT packages
+  apt:
+    update_cache: true
+
+- name: Upgrade APT packages
+  apt:
+    upgrade: true
+    update_cache: true
+
+- name: Install required APT packages
+  apt:
+    name: linux-modules-extra-raspi
+    state: present
