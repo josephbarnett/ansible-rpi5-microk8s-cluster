@@ -14,13 +14,13 @@ Disclaimer: My `ansible-fu` is weak 🙈 so this project is intentionally simple
 1. Clone this repository to your local machine:
 
     ```bash
-    git clone https://github.com/josephbarnett/rpi5-microk8s-cluster.git
+    git clone https://github.com/josephbarnett/ansible-rpi5-microk8s-cluster.git
     ```
 
 2. Navigate to the cloned repository directory:
 
     ```bash
-    cd rpi5-microk8s-cluster
+    cd ansible-rpi5-microk8s-cluster
     ```
 
 3. Update the inventory file inventory.ini with the appropriate IP addresses of your master and worker nodes, and specify the necessary variables.
